@@ -1,0 +1,12 @@
+hydra:
+  admin_api: "http://a89df209831c94b93a7c03c804133c29-578356777.us-east-1.elb.amazonaws.com:4445"
+  public_api: "http://a130ec37e5e8346398d37807e1241888-1127332940.us-east-1.elb.amazonaws.com:4444"
+kratos:
+  admin_api: "http://af3196767b2ee491b8eb8e3a9914d878-447079051.us-east-1.elb.amazonaws.com:4433"
+  public_api: "http://ab1872c04e51f46a1a1f39a8503ea0bc-75063120.us-east-1.elb.amazonaws.com:4434"
+keto:
+  write_api: "http://a0230305936eb41a387a6ff4523e1801-487303060.us-east-1.elb.amazonaws.com:4467"
+  read_api: "http://af9bf112adc0c4ca7b628413d23b989a-1795027655.us-east-1.elb.amazonaws.com:4466"
+workload:
+  read_ratio: 100             # 💡 For every write, do ~100 reads i.e. number of reads per write
+  duration_sec: 10            # 💡 Run for 60 seconds, set to 0 to run indefinitely
