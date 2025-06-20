@@ -14,7 +14,7 @@ image:https://img.shields.io/github/issues/{project-owner}/{project-name}[GitHub
 image:https://img.shields.io/github/license/{project-owner}/{project-name}[License]
 
 image::images/banner.png[banner]
-----
+---
 
 A workload simulator and benchmarking tool for evaluating https://www.ory.sh/docs/hydra[Ory Hydra], https://www.ory.sh/docs/kratos[Ory Kratos], and https://www.ory.sh/docs/keto[Ory Keto] with https://www.cockroachlabs.com/[CockroachDB].
 
