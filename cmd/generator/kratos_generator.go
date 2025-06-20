@@ -107,7 +107,7 @@ func RunKratosWorkload(dryRun bool) {
 	log.Printf("🟢 Active:                  %d", activeIdentityCount)
 	log.Printf("🔴 Inactive:                %d", inactiveIdentityCount)
 	log.Printf("✏️  Writes:                  %d", writeCount)
-	log.Printf("👁️  Reads:                  %d", readCount)
+	log.Printf("👁️  Reads:                   %d", readCount)
 	if writeCount > 0 {
 	    log.Printf("📊 Read/Write ratio:        %.1f:1", float64(readCount)/float64(writeCount))
 	}
