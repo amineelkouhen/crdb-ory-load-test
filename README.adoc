@@ -15,6 +15,7 @@ image:https://img.shields.io/github/license/{project-owner}/{project-name}[Licen
 
 image::images/banner.png[banner]
 ---
+
 A workload simulator and benchmarking tool for evaluating https://www.ory.sh/docs/hydra[Ory Hydra], https://www.ory.sh/docs/kratos[Ory Kratos], and https://www.ory.sh/docs/keto[Ory Keto] with https://www.cockroachlabs.com/[CockroachDB].
 
 You can also use the https://github.com/amineelkouhen/crdb-ory-sandbox[CockroachDB + Ory Sandbox] to provision the joint environment, and execute this tool. 
@@ -123,7 +124,7 @@ This approach:
 
 == 🙏 Acknowledgments
 
-Special thanks to mailto:virag.tripathi@cockroachlabs.com[Chatur] 👲🏾 for his contributions to the development of Ory Keto load simulator.
+Special thanks to mailto:virag.tripathi@cockroachlabs.com[Chatur] 👲🏾 for developing the https://github.com/viragtripathi/crdb-ory-keto-demo[Keto load simulator^].
 
 
 
