@@ -66,7 +66,7 @@ func RunHydraWorkload(dryRun bool) {
 					    log.Printf("🎟️  Access Token %s generated for OAuth2 Client %s", hashToken(token), clientID)
 						// Push the same identity read_ratio times
 						for j := 0; j < cfg.ReadRatio; j++ {
-							credentialsChannel <- clientCredentials{ClientID: clientID, ClientSecret: clientSecret, AccessToken: token}
+							credentialsChannel <- clientCredentials{ClientID: clientID, ClientSecret: clientSecret, AccessToken:  hashToken(token)}
 						}
 						writeCount++
 					}
@@ -88,7 +88,7 @@ func RunHydraWorkload(dryRun bool) {
 					if !dryRun {
 						active, err = hydra.IntrospectToken(t.AccessToken)
 						if active {
-						    log.Printf("👀 Token introspection result: Access Token=%s - Active=%v", hashToken(t.AccessToken), active)
+						    log.Printf("👀 Token introspection result: Access Token=%s - Active=%v", t.AccessToken, active)
 						} else if err != nil {
 						    failedReads++
 						}
