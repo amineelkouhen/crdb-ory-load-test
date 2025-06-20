@@ -6,6 +6,8 @@ import (
 	"time"
     "github.com/brianvoe/gofakeit/v6"
 	"github.com/google/uuid"
+	"crypto/sha256"
+	"encoding/hex"
 
 	"crdb-ory-load-test/internal/config"
 	"crdb-ory-load-test/internal/hydra"
@@ -61,7 +63,7 @@ func RunHydraWorkload(dryRun bool) {
 						log.Printf("❌  Client Credentials Grant failed: %v", err)
 						failedWrites++
 					} else {
-					    log.Printf("🎟️  Access Token generated for OAuth2 Client %s", token, clientID)
+					    log.Printf("🎟️  Access Token %s generated for OAuth2 Client %s", hashToken(token), clientID)
 						// Push the same identity read_ratio times
 						for j := 0; j < cfg.ReadRatio; j++ {
 							credentialsChannel <- clientCredentials{ClientID: clientID, ClientSecret: clientSecret, AccessToken: token}
@@ -86,7 +88,7 @@ func RunHydraWorkload(dryRun bool) {
 					if !dryRun {
 						active, err = hydra.IntrospectToken(t.AccessToken)
 						if active {
-						    log.Printf("👀 Token introspection result: ClientID=%s, Access Token=%s, Active=%v", t.ClientID, t.AccessToken, active)
+						    log.Printf("👀 Token introspection result: Access Token=%s - Active=%v", hashToken(t.AccessToken), active)
 						} else if err != nil {
 						    failedReads++
 						}
@@ -130,4 +132,11 @@ func RunHydraWorkload(dryRun bool) {
 	}
 
     log.Println("🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧")
+}
+
+func hashToken(token string) string {
+	hasher := sha256.New()           // Create a new SHA256 hasher
+	hasher.Write([]byte(token))      // Write the token bytes to the hasher
+	hashBytes := hasher.Sum(nil)     // Get the finalized hash as a byte slice
+	return hex.EncodeToString(hashBytes) // Encode the byte slice to a hexadecimal string
 }
