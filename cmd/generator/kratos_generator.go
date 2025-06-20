@@ -98,7 +98,7 @@ func RunKratosWorkload(dryRun bool) {
 	}
 
 	wg.Wait()
-	log.Println("🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧")
+	log.Println("🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧")
 	log.Println("✅  Kratos Load generation and identity checks complete")
 	log.Printf("⏱️  Duration:                %v", duration)
 	log.Printf("⚙️  Concurrency:             %d", totalWorkers)
@@ -107,7 +107,7 @@ func RunKratosWorkload(dryRun bool) {
 	log.Printf("🟢 Active:                  %d", activeIdentityCount)
 	log.Printf("🔴 Inactive:                %d", inactiveIdentityCount)
 	log.Printf("✏️  Writes:                  %d", writeCount)
-	log.Printf("👁️  Reads:                   %d", readCount)
+	log.Printf("👁️  Reads:                  %d", readCount)
 	if writeCount > 0 {
 	    log.Printf("📊 Read/Write ratio:        %.1f:1", float64(readCount)/float64(writeCount))
 	}
@@ -118,5 +118,5 @@ func RunKratosWorkload(dryRun bool) {
 		log.Println("⚠️  Dry-run mode: No tuples were written to Kratos.")
 	}
 
-    log.Println("🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧")
+    log.Println("🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧")
 }
