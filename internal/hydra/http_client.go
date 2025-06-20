@@ -169,7 +169,7 @@ func GrantClientCredentials(clientID, clientSecret string) (string, error) {
 }
 
 func IntrospectToken(token string) (bool, error) {
-        endpoint := *config.AppConfig.Hydra.PublicAPI + "/admin/oauth2/introspect"
+        endpoint := *config.AppConfig.Hydra.AdminAPI + "/admin/oauth2/introspect"
         data := url.Values{}
         data.Set("token", token)
 
