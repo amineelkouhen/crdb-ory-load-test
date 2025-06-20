@@ -6,8 +6,6 @@ import (
 	"time"
     "github.com/brianvoe/gofakeit/v6"
 	"github.com/google/uuid"
-	"crypto/sha256"
-	"encoding/hex"
 
 	"crdb-ory-load-test/internal/config"
 	"crdb-ory-load-test/internal/hydra"
@@ -47,7 +45,7 @@ func RunHydraWorkload(dryRun bool) {
     }
 
 	var wg sync.WaitGroup
-	credentialsChannel := make(chan clientCredentials, 10000)
+	credentialsChannel := make(chan clientCredentials)
 
 	var activeTokenCount, inactiveTokenCount, failedReads, failedWrites, readCount, writeCount int64
 
@@ -63,11 +61,10 @@ func RunHydraWorkload(dryRun bool) {
 						log.Printf("❌  Client Credentials Grant failed: %v", err)
 						failedWrites++
 					} else {
-					    hashed := hashToken(token)
-					    log.Printf("🎟️  Access Token %s generated.", hashed)
+					    log.Printf("🎟️  Access Token %s generated", token)
 						// Push the same identity read_ratio times
 						for j := 0; j < cfg.ReadRatio; j++ {
-							credentialsChannel <- clientCredentials{ClientID: clientID, ClientSecret: clientSecret, AccessToken: hashed}
+							credentialsChannel <- clientCredentials{ClientID: clientID, ClientSecret: clientSecret, AccessToken: token}
 						}
 						writeCount++
 					}
@@ -133,11 +130,4 @@ func RunHydraWorkload(dryRun bool) {
 	}
 
     log.Println("🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧")
-}
-
-func hashToken(token string) string {
-	hasher := sha256.New()           // Create a new SHA256 hasher
-	hasher.Write([]byte(token))      // Write the token bytes to the hasher
-	hashBytes := hasher.Sum(nil)     // Get the finalized hash as a byte slice
-	return hex.EncodeToString(hashBytes) // Encode the byte slice to a hexadecimal string
 }

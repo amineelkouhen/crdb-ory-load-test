@@ -9,6 +9,8 @@ import (
 	"net/http"
 	"time"
     "net/url"
+	"crypto/sha256"
+	"encoding/hex"
 
 	"crdb-ory-load-test/internal/config"
 )
@@ -64,7 +66,6 @@ type createClientRequest struct {
 	PkceEnforced bool `json:"pkce_enforced,omitempty"`
 }
 
-var createClientResponse map[string]interface{}
 var grantClientCredentialsResponse map[string]interface{}
 var tokenIntrospectionResponse map[string]interface{}
 
@@ -88,7 +89,7 @@ func CreateOAuth2Client(id, name, secret string) (bool, error) {
 	}
 
 	url := *config.AppConfig.Hydra.AdminAPI + "/admin/clients"
-	client := &http.Client{Timeout: 5 * time.Second}
+	client := &http.Client{Timeout: 60 * time.Second}
 
 	var resp *http.Response
 	var err error
@@ -115,15 +116,6 @@ func CreateOAuth2Client(id, name, secret string) (bool, error) {
 		return false, errors.New("⚠️  Unexpected status from Hydra")
 	}
 
-        body, _ := io.ReadAll(resp.Body)
-        ex := json.Unmarshal([]byte(body), &createClientResponse)
-        if ex != nil {
-            fmt.Printf("❌ Error decoding Client response: %v\n", ex)
-            return false, ex
-        }
-
-    fmt.Println(createClientResponse)
-
 	return true, nil
 }
 
@@ -142,7 +134,7 @@ func GrantClientCredentials(clientID, clientSecret string) (string, error) {
         return "", e
     }
 
-    client := &http.Client{Timeout: 5 * time.Second}
+    client := &http.Client{Timeout: 60 * time.Second}
 
     var resp *http.Response
     var err error
@@ -176,7 +168,7 @@ func GrantClientCredentials(clientID, clientSecret string) (string, error) {
         return "", ex
     }
 
-    return grantClientCredentialsResponse["access_token"].(string), nil
+    return hashToken(grantClientCredentialsResponse["access_token"].(string)), nil
 }
 
 func IntrospectToken(token string) (bool, error) {
@@ -227,6 +219,14 @@ func IntrospectToken(token string) (bool, error) {
             return false, ex
         }
         return tokenIntrospectionResponse["active"].(bool), nil
+}
+
+
+func hashToken(token string) string {
+	hasher := sha256.New()           // Create a new SHA256 hasher
+	hasher.Write([]byte(token))      // Write the token bytes to the hasher
+	hashBytes := hasher.Sum(nil)     // Get the finalized hash as a byte slice
+	return hex.EncodeToString(hashBytes) // Encode the byte slice to a hexadecimal string
 }
 
 func getStatus(resp *http.Response) int {
