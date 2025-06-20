@@ -9,8 +9,6 @@ import (
 	"net/http"
 	"time"
     "net/url"
-	"crypto/sha256"
-	"encoding/hex"
 
 	"crdb-ory-load-test/internal/config"
 )
@@ -168,7 +166,7 @@ func GrantClientCredentials(clientID, clientSecret string) (string, error) {
         return "", ex
     }
 
-    return hashToken(grantClientCredentialsResponse["access_token"].(string)), nil
+    return grantClientCredentialsResponse["access_token"].(string), nil
 }
 
 func IntrospectToken(token string) (bool, error) {
@@ -219,14 +217,6 @@ func IntrospectToken(token string) (bool, error) {
             return false, ex
         }
         return tokenIntrospectionResponse["active"].(bool), nil
-}
-
-
-func hashToken(token string) string {
-	hasher := sha256.New()           // Create a new SHA256 hasher
-	hasher.Write([]byte(token))      // Write the token bytes to the hasher
-	hashBytes := hasher.Sum(nil)     // Get the finalized hash as a byte slice
-	return hex.EncodeToString(hashBytes) // Encode the byte slice to a hexadecimal string
 }
 
 func getStatus(resp *http.Response) int {
