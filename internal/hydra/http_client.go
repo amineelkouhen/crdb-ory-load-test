@@ -80,10 +80,6 @@ func CreateOAuth2Client(id, name, secret string) (bool, error) {
     reqBody.RequestObjectSigningAlgorithm = "RS256"
     reqBody.Scope = "offline_access offline openid"
     reqBody.TokenEndpointAuthMethod = "client_secret_post"
-    reqBody.SkipContent = false
-    reqBody.SkipLogoutConsent = false
-    reqBody.SubjectType = "public"
-    reqBody.UserinfoSignedResponseAlgorithm = "none"
 
 	jsonData, e := json.Marshal(reqBody)
 	if e != nil {
@@ -197,7 +193,7 @@ func IntrospectToken(token string) (bool, error) {
 
     	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
-        client := &http.Client{Timeout: 5 * time.Second}
+        client := &http.Client{Timeout: 60 * time.Second}
 
         var resp *http.Response
         var err error
