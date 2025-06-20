@@ -22,7 +22,7 @@ func RunHydraWorkload(dryRun bool) {
 	cfg := config.AppConfig.Workload
 	duration := time.Duration(cfg.DurationSec) * time.Second
 	endTime := time.Now().Add(duration)
-    gofakeit.Seed(0)
+	gofakeit.Seed(0)
 
 	writeWorkers := 1
 	readWorkers := cfg.ReadRatio
@@ -45,7 +45,7 @@ func RunHydraWorkload(dryRun bool) {
     }
 
 	var wg sync.WaitGroup
-	credentialsChannel := make(chan clientCredentials)
+	credentialsChannel := make(chan clientCredentials, 10000)
 
 	var activeTokenCount, inactiveTokenCount, failedReads, failedWrites, readCount, writeCount int64
 
