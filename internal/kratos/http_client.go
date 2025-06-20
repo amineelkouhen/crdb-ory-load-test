@@ -117,7 +117,7 @@ func registrationIdentity(flowID, email, firstName, lastName, password string) (
 
 	jsonData, err := json.Marshal(reqBody)
 	if err != nil {
-		fmt.Printf("❌ Error marshaling check request: %v\n", err)
+		fmt.Printf("❌ Error marshaling registration request: %v\n", err)
 		return false, err
 	}
 

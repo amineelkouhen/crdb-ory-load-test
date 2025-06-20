@@ -87,7 +87,8 @@ Options:
             if !*dryRun {
                 checkHydra()
             }
-            fmt.Println("hydra.")
+            metrics.Init("hydra")
+            generator.RunHydraWorkload(*dryRun)
         case "kratos":
             if !*dryRun {
                 checkKratos()
@@ -107,9 +108,9 @@ Options:
                 checkKeto()
             }
             metrics.Init("all")
+            generator.RunHydraWorkload(*dryRun)
             generator.RunKratosWorkload(*dryRun)
             generator.RunKetoWorkload(*dryRun)
-            fmt.Println("all.")
 	}
 
 	if *serveMetrics {

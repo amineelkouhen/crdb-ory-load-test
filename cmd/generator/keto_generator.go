@@ -26,7 +26,7 @@ func RunKetoWorkload(dryRun bool) {
 	totalWorkers := writeWorkers + readWorkers
 
 	var wg sync.WaitGroup
-	tupleChan := make(chan tuple, 10000)
+	tupleChannel := make(chan tuple, 10000)
 
 	var allowedCount, deniedCount, failedReads, failedWrites, readCount, writeCount int64
 
@@ -51,7 +51,7 @@ func RunKetoWorkload(dryRun bool) {
 					} else {
 						// Push the same tuple read_ratio times
 						for j := 0; j < cfg.ReadRatio; j++ {
-							tupleChan <- tuple{Subject: subjectFull, Object: objectID}
+							tupleChannel <- tuple{Subject: subjectFull, Object: objectID}
 						}
 						writeCount++
 					}
@@ -67,7 +67,7 @@ func RunKetoWorkload(dryRun bool) {
 			defer wg.Done()
 			for time.Now().Before(endTime) {
 				select {
-				case t := <-tupleChan:
+				case t := <-tupleChannel:
 					allowed := false
 					var err error
 					if !dryRun {
@@ -98,19 +98,19 @@ func RunKetoWorkload(dryRun bool) {
 	wg.Wait()
 	log.Println("🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧")
 	log.Println("✅  Keto Load generation and permission checks complete")
-	log.Printf("⏱️ Duration: %v", duration)
-	log.Printf("⚙️ Concurrency: %d", totalWorkers)
-	log.Printf("🚦 Checks/sec:  %.1f", float64(readCount)/float64(cfg.DurationSec))
-	log.Printf("🧪 Mode:        %s", map[bool]string{true: "DRY RUN", false: "LIVE"}[dryRun])
-	log.Printf("✔️ Allowed:     %d", allowedCount)
-	log.Printf("🚫 Denied:      %d", deniedCount)
-	log.Printf("✏️ Writes:      %d", writeCount)
-	log.Printf("👁️ Reads:       %d", readCount)
+	log.Printf("⏱️ Duration:              %v", duration)
+	log.Printf("⚙️ Concurrency:           %d", totalWorkers)
+	log.Printf("🚦 Checks/sec:            %.1f", float64(readCount)/float64(cfg.DurationSec))
+	log.Printf("🧪 Mode:                  %s", map[bool]string{true: "DRY RUN", false: "LIVE"}[dryRun])
+	log.Printf("✔️ Allowed:               %d", allowedCount)
+	log.Printf("🚫 Denied:                %d", deniedCount)
+	log.Printf("✏️ Writes:                %d", writeCount)
+	log.Printf("👁️Reads:                 %d", readCount)
 	if writeCount > 0 {
-		log.Printf("📊 Read/Write ratio: %.1f:1", float64(readCount)/float64(writeCount))
+	    log.Printf("📊 Read/Write ratio:      %.1f:1", float64(readCount)/float64(writeCount))
 	}
 	log.Printf("🚨 Failed writes to Keto: %d", failedWrites)
-	log.Printf("🚨 Failed reads to Keto: %d", failedReads)
+	log.Printf("🚨 Failed reads to Keto:  %d", failedReads)
 
 	if dryRun {
 		log.Println("⚠️  Dry-run mode: No tuples were written to Keto.")

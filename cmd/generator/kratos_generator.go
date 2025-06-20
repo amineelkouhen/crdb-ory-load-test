@@ -27,7 +27,7 @@ func RunKratosWorkload(dryRun bool) {
 	totalWorkers := writeWorkers + readWorkers
 
 	var wg sync.WaitGroup
-	identityChan := make(chan identity, 10000)
+	identityChannel := make(chan identity, 10000)
 
 	var activeIdentityCount, inactiveIdentityCount, failedReads, failedWrites, readCount, writeCount int64
 
@@ -53,7 +53,7 @@ func RunKratosWorkload(dryRun bool) {
 					} else {
 						// Push the same identity read_ratio times
 						for j := 0; j < cfg.ReadRatio; j++ {
-							identityChan <- identity{Email: email, FirstName: firstName, LastName: lastName}
+							identityChannel <- identity{Email: email, FirstName: firstName, LastName: lastName}
 						}
 						writeCount++
 					}
@@ -69,7 +69,7 @@ func RunKratosWorkload(dryRun bool) {
 			defer wg.Done()
 			for time.Now().Before(endTime) {
 				select {
-				case t := <-identityChan:
+				case t := <-identityChannel:
 					active := false
 					var err error
 					if !dryRun {
@@ -100,19 +100,19 @@ func RunKratosWorkload(dryRun bool) {
 	wg.Wait()
 	log.Println("🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧")
 	log.Println("✅  Kratos Load generation and identity checks complete")
-	log.Printf("⏱️ Duration: %v", duration)
-	log.Printf("⚙️ Concurrency: %d", totalWorkers)
-	log.Printf("🚦 Checks/sec:  %.1f", float64(readCount)/float64(cfg.DurationSec))
-	log.Printf("🧪 Mode:        %s", map[bool]string{true: "DRY RUN", false: "LIVE"}[dryRun])
-	log.Printf("🟢 Active:     %d", activeIdentityCount)
-	log.Printf("🔴 Inactive:      %d", inactiveIdentityCount)
-	log.Printf("✏️ Writes:      %d", writeCount)
-	log.Printf("👁️Reads:       %d", readCount)
+	log.Printf("⏱️ Duration:                %v", duration)
+	log.Printf("⚙️ Concurrency:             %d", totalWorkers)
+	log.Printf("🚦 Checks/sec:              %.1f", float64(readCount)/float64(cfg.DurationSec))
+	log.Printf("🧪 Mode:                    %s", map[bool]string{true: "DRY RUN", false: "LIVE"}[dryRun])
+	log.Printf("🟢 Active:                  %d", activeIdentityCount)
+	log.Printf("🔴 Inactive:                %d", inactiveIdentityCount)
+	log.Printf("✏️ Writes:                  %d", writeCount)
+	log.Printf("👁️Reads:                   %d", readCount)
 	if writeCount > 0 {
-		log.Printf("📊 Read/Write ratio: %.1f:1", float64(readCount)/float64(writeCount))
+	    log.Printf("📊 Read/Write ratio:        %.1f:1", float64(readCount)/float64(writeCount))
 	}
 	log.Printf("🚨 Failed writes to Kratos: %d", failedWrites)
-	log.Printf("🚨 Failed reads to Kratos: %d", failedReads)
+	log.Printf("🚨 Failed reads to Kratos:  %d", failedReads)
 
 	if dryRun {
 		log.Println("⚠️  Dry-run mode: No tuples were written to Kratos.")
