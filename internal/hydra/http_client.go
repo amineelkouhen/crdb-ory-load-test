@@ -79,7 +79,7 @@ func CreateOAuth2Client(id, name, secret string) (bool, error) {
     reqBody.ResponseTypes = []string{"code"}
     reqBody.RequestObjectSigningAlgorithm = "RS256"
     reqBody.Scope = "offline_access offline openid"
-    //reqBody.RegistrationClientURI = *config.AppConfig.Hydra.PublicAPI + "/oauth2/register/"
+    reqBody.TokenEndpointAuthMethod = "client_secret_post"
 
 	jsonData, e := json.Marshal(reqBody)
 	if e != nil {
@@ -131,17 +131,16 @@ func GrantClientCredentials(clientID, clientSecret string) (string, error) {
     endpoint := *config.AppConfig.Hydra.PublicAPI + "/oauth2/token"
     data := url.Values{}
     data.Set("grant_type", "client_credentials")
-    data.Set("scope", "read")
+    data.Set("client_id", clientID)
+    data.Set("client_secret", clientSecret)
 
 	req, e := http.NewRequest("POST", endpoint, bytes.NewBufferString(data.Encode()))
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
     if e != nil {
         fmt.Printf("❌ Error creating grant request: %v\n", e)
         return "", e
     }
-
-	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	req.SetBasicAuth(clientID, clientSecret)
 
     client := &http.Client{Timeout: 5 * time.Second}
 
