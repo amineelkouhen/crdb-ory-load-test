@@ -80,6 +80,10 @@ func CreateOAuth2Client(id, name, secret string) (bool, error) {
     reqBody.RequestObjectSigningAlgorithm = "RS256"
     reqBody.Scope = "offline_access offline openid"
     reqBody.TokenEndpointAuthMethod = "client_secret_post"
+    reqBody.SkipContent = false
+    reqBody.SkipLogoutConsent = false
+    reqBody.SubjectType = "public"
+    reqBody.userinfo_signed_response_alg = "none"
 
 	jsonData, e := json.Marshal(reqBody)
 	if e != nil {
