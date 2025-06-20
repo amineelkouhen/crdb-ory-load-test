@@ -63,10 +63,11 @@ func RunHydraWorkload(dryRun bool) {
 						log.Printf("❌  Client Credentials Grant failed: %v", err)
 						failedWrites++
 					} else {
-					    log.Printf("🎟️  Access Token %s generated for OAuth2 Client %s", hashToken(token), clientID)
+					    hashed := hashToken(token)
+					    log.Printf("🎟️  Access Token %s generated.", hashed)
 						// Push the same identity read_ratio times
 						for j := 0; j < cfg.ReadRatio; j++ {
-							credentialsChannel <- clientCredentials{ClientID: clientID, ClientSecret: clientSecret, AccessToken:  hashToken(token)}
+							credentialsChannel <- clientCredentials{ClientID: clientID, ClientSecret: clientSecret, AccessToken: hashed}
 						}
 						writeCount++
 					}
