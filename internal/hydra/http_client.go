@@ -83,7 +83,7 @@ func CreateOAuth2Client(id, name, secret string) (bool, error) {
     reqBody.SkipContent = false
     reqBody.SkipLogoutConsent = false
     reqBody.SubjectType = "public"
-    reqBody.userinfo_signed_response_alg = "none"
+    reqBody.UserinfoSignedResponseAlgorithm = "none"
 
 	jsonData, e := json.Marshal(reqBody)
 	if e != nil {
