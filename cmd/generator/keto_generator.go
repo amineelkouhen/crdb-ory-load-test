@@ -96,16 +96,16 @@ func RunKetoWorkload(dryRun bool) {
 	}
 
 	wg.Wait()
-	log.Println("🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧")
+	log.Println("🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧")
 	log.Println("✅  Keto Load generation and permission checks complete")
-	log.Printf("⏱️ Duration:              %v", duration)
-	log.Printf("⚙️ Concurrency:           %d", totalWorkers)
+	log.Printf("⏱️  Duration:              %v", duration)
+	log.Printf("⚙️  Concurrency:           %d", totalWorkers)
 	log.Printf("🚦 Checks/sec:            %.1f", float64(readCount)/float64(cfg.DurationSec))
 	log.Printf("🧪 Mode:                  %s", map[bool]string{true: "DRY RUN", false: "LIVE"}[dryRun])
-	log.Printf("✔️ Allowed:               %d", allowedCount)
+	log.Printf("✔️  Allowed:               %d", allowedCount)
 	log.Printf("🚫 Denied:                %d", deniedCount)
-	log.Printf("✏️ Writes:                %d", writeCount)
-	log.Printf("👁️Reads:                 %d", readCount)
+	log.Printf("✏️  Writes:                %d", writeCount)
+	log.Printf("👁️  Reads:                 %d", readCount)
 	if writeCount > 0 {
 	    log.Printf("📊 Read/Write ratio:      %.1f:1", float64(readCount)/float64(writeCount))
 	}
@@ -116,5 +116,5 @@ func RunKetoWorkload(dryRun bool) {
 		log.Println("⚠️  Dry-run mode: No tuples were written to Keto.")
 	}
 
-	log.Println("🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧")
+	log.Println("🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧")
 }
