@@ -93,15 +93,15 @@ Results include detailed breakdowns:
 ✅  Kratos Load generation and identity checks complete
 ⏱️  Duration:                10s
 ⚙️  Concurrency:             101
-🚦 Checks/sec:              89.8
-🧪 Mode:                    LIVE
-🟢 Active:                  898
-🔴 Inactive:                0
+🚦  Checks/sec:              89.8
+🧪  Mode:                    LIVE
+🟢  Active:                  898
+🔴  Inactive:                0
 ✏️  Writes:                  10
 👁️  Reads:                   898
-📊 Read/Write ratio:        89.8:1
-🚨 Failed writes to Kratos: 0
-🚨 Failed reads to Kratos:  0
+📊  Read/Write ratio:        89.8:1
+🚨  Failed writes to Kratos: 0
+🚨  Failed reads to Kratos:  0
 🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧🚧
 ----
 
