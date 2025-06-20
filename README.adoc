@@ -70,7 +70,10 @@ make clean build
   --read-ratio=100 \
   --workload-config=config/config.yaml \
   --log-file=run.log
+  --scope=hydra
 ----
+
+You can load test each application alone, by setting --scope to `hydra`, `kratos` or `keto`. You can also simulate the three components by setting scope to `all`
 
 Happy benchmarking! 🧪📈
 
