@@ -30,7 +30,7 @@ func RunHydraWorkload(dryRun bool) {
 
     clientID := uuid.New().String()
     clientName := "hydra-load-test-client"
-    clientSecret := gofakeit.Password(true, true, true, true, false, 20)
+    clientSecret := gofakeit.Password(true, true, true, true, false, 26)
 
 	log.Printf("🚧 Hydra Load generation for %v with %d total workers (%d writers, %d readers)...",
 		duration, totalWorkers, writeWorkers, readWorkers)
@@ -61,6 +61,7 @@ func RunHydraWorkload(dryRun bool) {
 						log.Printf("❌  Client Credentials Grant failed: %v", err)
 						failedWrites++
 					} else {
+					    log.Printf("🎟️ Token %s generated using OAuth2 Client %s", token, clientID)
 						// Push the same identity read_ratio times
 						for j := 0; j < cfg.ReadRatio; j++ {
 							credentialsChannel <- clientCredentials{ClientID: clientID, ClientSecret: clientSecret, AccessToken: token}
@@ -85,7 +86,7 @@ func RunHydraWorkload(dryRun bool) {
 					if !dryRun {
 						active, err = hydra.IntrospectToken(t.AccessToken)
 						if active {
-						    log.Printf("🎟️ Token introspection result: ClientID=%s, Access Token=%s, Active=%v", t.ClientID, t.AccessToken, active)
+						    log.Printf("🎟👀 Token introspection result: ClientID=%s, Access Token=%s, Active=%v", t.ClientID, t.AccessToken, active)
 						} else if err != nil {
 						    failedReads++
 						}

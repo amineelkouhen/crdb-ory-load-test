@@ -75,21 +75,23 @@ func CreateOAuth2Client(id, name, secret string) (bool, error) {
     reqBody.ClientName = name
     reqBody.ClientSecret = secret
     reqBody.ClientSecretExpiresAt = 0
-    reqBody.GrantTypes = []string{"authorization_code", "refresh_token", "client_credentials"}
-    reqBody.ResponseTypes = []string{"token", "code"}
-    reqBody.Scope = "openid offline read"
+    reqBody.GrantTypes = []string{"client_credentials"}
+    reqBody.ResponseTypes = []string{"code"}
+    reqBody.RequestObjectSigningAlgorithm = "RS256"
+    reqBody.Scope = "offline_access offline openid"
+    //reqBody.RegistrationClientURI = *config.AppConfig.Hydra.PublicAPI + "/oauth2/register/"
 
-
-	jsonData, err := json.Marshal(reqBody)
-	if err != nil {
-		fmt.Printf("❌ Error marshaling create client request: %v\n", err)
-		return false, err
+	jsonData, e := json.Marshal(reqBody)
+	if e != nil {
+		fmt.Printf("❌ Error marshaling create client request: %v\n", e)
+		return false, e
 	}
 
 	url := *config.AppConfig.Hydra.AdminAPI + "/admin/clients"
 	client := &http.Client{Timeout: 5 * time.Second}
 
 	var resp *http.Response
+	var err error
 	for attempt := 1; attempt <= 3; attempt++ {
 		resp, err = client.Post(url, "application/json", bytes.NewBuffer(jsonData))
 		if err == nil && resp != nil && resp.StatusCode == 201 {
@@ -113,6 +115,15 @@ func CreateOAuth2Client(id, name, secret string) (bool, error) {
 		return false, errors.New("⚠️  Unexpected status from Hydra")
 	}
 
+        body, _ := io.ReadAll(resp.Body)
+        ex := json.Unmarshal([]byte(body), &createClientResponse)
+        if ex != nil {
+            fmt.Printf("❌ Error decoding Client response: %v\n", ex)
+            return false, ex
+        }
+
+    fmt.Println(createClientResponse)
+
 	return true, nil
 }
 
@@ -122,11 +133,11 @@ func GrantClientCredentials(clientID, clientSecret string) (string, error) {
     data.Set("grant_type", "client_credentials")
     data.Set("scope", "read")
 
-	req, err := http.NewRequest("POST", endpoint, bytes.NewBufferString(data.Encode()))
+	req, e := http.NewRequest("POST", endpoint, bytes.NewBufferString(data.Encode()))
 
-    if err != nil {
-        fmt.Printf("❌ Error creating grant request: %v\n", err)
-        return "", err
+    if e != nil {
+        fmt.Printf("❌ Error creating grant request: %v\n", e)
+        return "", e
     }
 
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
@@ -135,8 +146,9 @@ func GrantClientCredentials(clientID, clientSecret string) (string, error) {
     client := &http.Client{Timeout: 5 * time.Second}
 
     var resp *http.Response
+    var err error
     for attempt := 1; attempt <= 3; attempt++ {
-        resp, err := client.Do(req)
+        resp, err = client.Do(req)
         if err == nil && resp != nil && resp.StatusCode == 200 {
             break
         }
@@ -159,10 +171,10 @@ func GrantClientCredentials(clientID, clientSecret string) (string, error) {
     }
 
     body, _ := io.ReadAll(resp.Body)
-    e := json.Unmarshal([]byte(body), &grantClientCredentialsResponse)
+    ex := json.Unmarshal([]byte(body), &grantClientCredentialsResponse)
     if e != nil {
-        fmt.Printf("❌ Error decoding Hydra Client Credentials grant response: %v\n", e)
-        return "", e
+        fmt.Printf("❌ Error decoding Hydra Client Credentials grant response: %v\n", ex)
+        return "", ex
     }
 
     return grantClientCredentialsResponse["access_token"].(string), nil
@@ -173,11 +185,11 @@ func IntrospectToken(token string) (bool, error) {
         data := url.Values{}
         data.Set("token", token)
 
-    	req, err := http.NewRequest("POST", endpoint, bytes.NewBufferString(data.Encode()))
+    	req, e := http.NewRequest("POST", endpoint, bytes.NewBufferString(data.Encode()))
 
-        if err != nil {
-            fmt.Printf("❌ Error creating introspect request: %v\n", err)
-            return false, err
+        if e != nil {
+            fmt.Printf("❌ Error creating introspect request: %v\n", e)
+            return false, e
         }
 
     	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
@@ -185,8 +197,9 @@ func IntrospectToken(token string) (bool, error) {
         client := &http.Client{Timeout: 5 * time.Second}
 
         var resp *http.Response
+        var err error
         for attempt := 1; attempt <= 3; attempt++ {
-            resp, err := client.Do(req)
+            resp, err = client.Do(req)
             if err == nil && resp != nil && resp.StatusCode == 200 {
                 break
             }
@@ -209,12 +222,11 @@ func IntrospectToken(token string) (bool, error) {
         }
 
         body, _ := io.ReadAll(resp.Body)
-        e := json.Unmarshal([]byte(body), &tokenIntrospectionResponse)
-        if e != nil {
-            fmt.Printf("❌ Error decoding Hydra Client Credentials grant response: %v\n", e)
-            return false, e
+        ex := json.Unmarshal([]byte(body), &tokenIntrospectionResponse)
+        if ex != nil {
+            fmt.Printf("❌ Error decoding Hydra Client Credentials grant response: %v\n", ex)
+            return false, ex
         }
-
         return tokenIntrospectionResponse["active"].(bool), nil
 }
 
